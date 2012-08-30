@@ -47,7 +47,11 @@ define :nova_package, :enable => true do
       action [:disable, :stop]
     end
 
-    subscribes :restart, resources(:template => "/etc/nova/nova.conf")
+    # we never want to restart nova-api if SSL is enabled and we're in the
+    # nova-multi-controller role
+    unless nova_name == "nova-api" and node[:nova][:api][:protocol] == "https" and node["roles"].include?("nova-multi-controller")
+      subscribes :restart, resources(:template => "/etc/nova/nova.conf")
+    end
   end
 
 end
