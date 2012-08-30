@@ -75,6 +75,23 @@ class NovaService < ServiceObject
       "nova-multi-compute" => nodes.map { |x| x.name }
     }
 
+    os_disk_size = 0
+    head["crowbar"]["disks"].each do | disk, data |
+      if data["usage"] == "OS"
+        os_disk_size = data["size_bytes"] unless data["size_bytes"].nil?
+        break
+      end
+    end
+    if os_disk_size > 0
+      # Allocate a quarter of the disk for the volumes.
+      # Even in degenerate cases with small disks (8 GB, virtualized demo
+      # setup), 2 GB will go to swap (autoyast will use the amount of RAM as a
+      # basis, and we recommend 2 GB of RAM), 2 GB will be used by the OS (ok,
+      # we recommend 4 GB...). That leaves 4 GB for the volume storage and for
+      # images stored in glance. And the quarter of 8 GB is 2 GB.
+      base["attributes"]["nova"]["volume"]["local_size"] = os_disk_size / 4
+    end
+
     base["attributes"]["nova"]["db"]["sql_engine"] = ""
     base["attributes"]["nova"]["db"]["sql_instance"] = ""
     begin
