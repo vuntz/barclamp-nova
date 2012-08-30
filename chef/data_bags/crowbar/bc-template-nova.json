@@ -35,7 +35,7 @@
         "volume_name": "nova-volumes",
         "type": "local",
         "local_file": "/var/lib/nova/volume.raw",
-        "local_size": 2000000000
+        "local_size": 10000000000
       },
       "rabbit": {
         "password": "secure_password",
