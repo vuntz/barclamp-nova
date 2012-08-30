@@ -151,7 +151,7 @@ if node["roles"].include?("nova-multi-controller")
   else
     api = node
   end
-  public_api_host = 'public.'+api[:fqdn]
+  public_api_host = api[:crowbar][:public_name].nil? ? 'public.'+api[:fqdn] : api[:crowbar][:public_name]
   admin_api_host = api[:fqdn]
   api_protocol = node[:nova][:api][:protocol]
 

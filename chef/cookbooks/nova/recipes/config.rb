@@ -74,7 +74,7 @@ else
   api = node
 end
 api_scheme = api[:nova][:api][:protocol]
-public_api_host = 'public.'+api[:fqdn]
+public_api_host = api[:crowbar][:public_name].nil? ? 'public.'+api[:fqdn] : api[:crowbar][:public_name]
 admin_api_host = api[:fqdn]
 Chef::Log.info("Api server found at #{public_api_host} #{admin_api_host}")
 
@@ -106,7 +106,7 @@ vncproxies = search(:node, "recipes:nova\\:\\:vncproxy#{env_filter}") || []
 if vncproxies.length > 0
   vncproxy = vncproxies[0]
   vncproxy = node if vncproxy.name == node.name
-  vncproxy_public_host = 'public.'+vncproxy[:fqdn]
+  vncproxy_public_host = vncproxy[:crowbar][:public_name].nil? ? 'public.'+vncproxy[:fqdn] : vncproxy[:crowbar][:public_name]
 else
   vncproxy_public_host = nil
 end

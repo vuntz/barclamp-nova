@@ -146,7 +146,7 @@ keystone_register "register nova-volume service" do
   action :add_service
 end
 
-public_api_host = 'public.'+node[:fqdn]
+public_api_host = node[:crowbar][:public_name].nil? ? 'public.'+node[:fqdn] : node[:crowbar][:public_name]
 admin_api_host = node[:fqdn]
 api_protocol = node[:nova][:api][:protocol]
 
