@@ -264,10 +264,15 @@ class NovaService < ServiceObject
     elements["nova-multi-controller"].each do |n|
       node = NodeObject.find_node_by_name(n)
       roles = node.roles()
-      ["ceph-store", "swift-storage"].each do |role|
-        if roles.include?(role)
-          errors << "Node #{n} already has the #{role} role; nodes cannot have both nova-multi-controller and #{role} roles."
-        end
+
+      role = "ceph-store"
+      if roles.include?(role) and proposal["attributes"]["nova"]["volume"]["type"] != "rados"
+        errors << "Node #{n} already has the #{role} role; nodes cannot have both nova-multi-controller and #{role} roles if Ceph is not used for volume storage."
+      end
+
+      role = "swift-storage"
+      if roles.include?(role)
+        errors << "Node #{n} already has the #{role} role; nodes cannot have both nova-multi-controller and #{role} roles."
       end
     end
 
