@@ -29,7 +29,12 @@ class NovaController < BarclampController
     end
     if not node.nil?
       node["crowbar"]["disks"].each do | disk, data |
-        disk_list[disk] = data["size"] if data["usage"] == "Storage"
+        unless data["usage"] != "Storage" or data["size_bytes"].nil?
+	  size_gb = data["size_bytes"].to_f / (1000**3)
+	  if size_gb >= 0.1
+            disk_list[disk] = sprintf("%#1.1f", size_gb)
+	  end
+	end
       end
     end
     Rails.logger.info "disk list #{disk_list.inspect}"

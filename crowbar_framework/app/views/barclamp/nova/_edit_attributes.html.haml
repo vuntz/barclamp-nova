@@ -118,19 +118,24 @@
       i18n_msg('warning', node, volume_role, 'It has no suitable disk for nova-volume storage. '
                                            + 'If applyed, regular file will be used for volume group');
     }
+    var unsorted_disk_list = [];
     $.each(data, function(disk, size){
-      $(volume_disk_list_path).append('<li>'
-        + '<input type="checkbox"'
+      unsorted_disk_list.push('<li>'
+        + '<input type="checkbox" '
         + 'name="'+ disk + '" '
         + 'value="' + disk + '" '
         + 'onclick=update_nova_disks()'
         + ">" 
         + disk
-        + ", size: "
+        + " ("
         + size
-        + " sectors<br>"
+        + " GB)<br>"
         + '</li>'
       );
+    });
+    unsorted_disk_list.sort();
+    $.each(unsorted_disk_list, function(index, li){
+      $(volume_disk_list_path).append(li)
     });
     update_nova_disks();
   }
