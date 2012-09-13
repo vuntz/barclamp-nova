@@ -74,7 +74,14 @@ else
   api = node
 end
 api_scheme = api[:nova][:api][:protocol]
-public_api_host = api[:crowbar][:public_name].nil? ? 'public.'+api[:fqdn] : api[:crowbar][:public_name]
+# For the public endpoint, we prefer the public name. If not set, then we use
+# the IP address except for SSL, where we always prefer a hostname (for
+# certificate validation)
+if api[:crowbar][:public_name].nil? and api[:nova][:api][:protocol] != "https"
+   public_api_host = Chef::Recipe::Barclamp::Inventory.get_network_by_type(api, "public").address
+else
+   public_api_host = api[:crowbar][:public_name].nil? ? 'public.'+api[:fqdn] : api[:crowbar][:public_name]
+end
 admin_api_host = api[:fqdn]
 Chef::Log.info("Api server found at #{public_api_host} #{admin_api_host}")
 
@@ -106,7 +113,14 @@ vncproxies = search(:node, "recipes:nova\\:\\:vncproxy#{env_filter}") || []
 if vncproxies.length > 0
   vncproxy = vncproxies[0]
   vncproxy = node if vncproxy.name == node.name
-  vncproxy_public_host = vncproxy[:crowbar][:public_name].nil? ? 'public.'+vncproxy[:fqdn] : vncproxy[:crowbar][:public_name]
+  # For the public endpoint, we prefer the public name. If not set, then we use
+  # the IP address except for SSL, where we always prefer a hostname (for
+  # certificate validation)
+  if vncproxy[:crowbar][:public_name].nil? and node[:nova][:novnc][:ssl_enabled]
+     vncproxy_public_host = Chef::Recipe::Barclamp::Inventory.get_network_by_type(vncproxy, "public").address
+  else
+     vncproxy_public_host = vncproxy[:crowbar][:public_name].nil? ? 'public.'+vncproxy[:fqdn] : vncproxy[:crowbar][:public_name]
+  end
 else
   vncproxy_public_host = nil
 end

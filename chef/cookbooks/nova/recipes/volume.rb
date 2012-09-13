@@ -146,7 +146,14 @@ keystone_register "register nova-volume service" do
   action :add_service
 end
 
-public_api_host = node[:crowbar][:public_name].nil? ? 'public.'+node[:fqdn] : node[:crowbar][:public_name]
+# For the public endpoint, we prefer the public name. If not set, then we use
+# the IP address except for SSL, where we always prefer a hostname (for
+# certificate validation)
+if node[:crowbar][:public_name].nil? and node[:nova][:api][:protocol] != "https"
+   public_api_host = Chef::Recipe::Barclamp::Inventory.get_network_by_type(node, "public").address
+else
+   public_api_host = node[:crowbar][:public_name].nil? ? 'public.'+node[:fqdn] : node[:crowbar][:public_name]
+end
 admin_api_host = node[:fqdn]
 api_protocol = node[:nova][:api][:protocol]
 

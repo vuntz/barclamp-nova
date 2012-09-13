@@ -151,7 +151,15 @@ if node["roles"].include?("nova-multi-controller")
   else
     api = node
   end
-  public_api_host = api[:crowbar][:public_name].nil? ? 'public.'+api[:fqdn] : api[:crowbar][:public_name]
+
+  # For the public endpoint, we prefer the public name. If not set, then we use
+  # the IP address except for SSL, where we always prefer a hostname (for
+  # certificate validation)
+  if api[:crowbar][:public_name].nil? and node[:nova][:api][:protocol] != "https"
+     public_api_host = Chef::Recipe::Barclamp::Inventory.get_network_by_type(api, "public").address
+  else
+     public_api_host = api[:crowbar][:public_name].nil? ? 'public.'+api[:fqdn] : api[:crowbar][:public_name]
+  end
   admin_api_host = api[:fqdn]
   api_protocol = node[:nova][:api][:protocol]
 
