@@ -61,6 +61,7 @@ locale_additions:
           protocol: Protocol
           apache_ssl_crt_file: SSL Certificate File
           apache_ssl_key_file: SSL Key File
+          apache_ssl_crt_chain_file: SSL Certificate Chain File
           novnc_header: noVNC Security Attributes
           novnc_ssl_enabled: noVNC via SSL
           novnc_ssl_cert: noVNC SSL Certificate File

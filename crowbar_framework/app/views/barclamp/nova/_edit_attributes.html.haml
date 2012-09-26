@@ -68,6 +68,10 @@
         %p
           %label{ :for => :apache_ssl_key_file }= t('.apache_ssl_key_file')
           = text_field_tag :apache_ssl_key_file, @proposal.raw_data['attributes'][@proposal.barclamp]["apache"]["ssl_key_file"], :size => 80, :onchange => "update_value('apache/ssl_key_file', 'apache_ssl_key_file', 'string')"
+
+        %p
+          %label{ :for => :apache_ssl_crt_chain_file }= t('.apache_ssl_crt_chain_file')
+          = text_field_tag :apache_ssl_crt_chain_file, @proposal.raw_data['attributes'][@proposal.barclamp]["apache"]["ssl_crt_chain_file"], :size => 80, :onchange => "update_value('apache/ssl_crt_chain_file', 'apache_ssl_crt_chain_file', 'string')"
     %p
       %label{ :for => :novnc_header }= t('.novnc_header')
     %div.container

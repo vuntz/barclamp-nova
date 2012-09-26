@@ -25,6 +25,9 @@ Listen <%= options[:port] %>
     SSLEngine on
     SSLCertificateFile <%= node[:nova][:apache][:ssl_crt_file] %>
     SSLCertificateKeyFile <%= node[:nova][:apache][:ssl_key_file] %>
+    <% unless node[:nova][:apache][:ssl_crt_chain_file].nil? or node[:nova][:apache][:ssl_crt_chain_file].empty? %>
+    SSLCertificateChainFile <%= node[:nova][:apache][:ssl_crt_chain_file] %>
+    <% end %>
 
     # Need to run as user 'openstack-nova' to gain access to '/etc/nova/nova.conf'
     WSGIDaemonProcess nova-<%= api %> user=<%= node[:nova][:user] %> group=<%= node[:nova][:group] %> processes=2

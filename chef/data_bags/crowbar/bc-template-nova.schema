@@ -30,7 +30,8 @@
               "required": true,
               "mapping": {
                 "ssl_crt_file": { "type": "str", "required": true },
-                "ssl_key_file": { "type": "str", "required": true }
+                "ssl_key_file": { "type": "str", "required": true },
+                "ssl_crt_chain_file": { "type": "str" }
               }
             },
             "novnc": {
