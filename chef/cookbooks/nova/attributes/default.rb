@@ -41,6 +41,11 @@ default[:nova][:rabbit][:vhost] = "/nova"
 default[:nova][:libvirt_type] = "kvm"
 
 #
+# Scheduler Settings
+#
+default[:nova][:scheduler][:ram_allocation_ratio] = "1.0"
+
+#
 # Shared Settings
 #
 default[:nova][:hostname] = "nova"
