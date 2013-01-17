@@ -101,14 +101,21 @@ else
   keystone = node
 end
 
-keystone_host = keystone[:fqdn]
+# For the public endpoint, we prefer the public name. If not set, then we use
+# the IP address except for SSL, where we always prefer a hostname (for
+# certificate validation)
+if keystone[:crowbar][:public_name].nil? and keystone[:keystone][:api][:protocol] != "https"
+  public_keystone_host = Chef::Recipe::Barclamp::Inventory.get_network_by_type(keystone, "public").address
+else
+  public_keystone_host = keystone[:crowbar][:public_name].nil? ? 'public.'+keystone[:fqdn] : keystone[:crowbar][:public_name]
+end
 keystone_protocol = keystone["keystone"]["api"]["protocol"]
 keystone_token = keystone["keystone"]["admin"]["token"] rescue nil
 admin_username = keystone["keystone"]["admin"]["username"] rescue nil
 admin_password = keystone["keystone"]["admin"]["password"] rescue nil
 default_tenant = keystone["keystone"]["default"]["tenant"] rescue nil
 keystone_service_port = keystone["keystone"]["api"]["service_port"] rescue nil
-Chef::Log.info("Keystone server found at #{keystone_host}")
+Chef::Log.info("Keystone server found at #{public_keystone_host}")
 
 apis = search(:node, "recipes:nova\\:\\:api#{env_filter}") || []
 if apis.length > 0 and !node[:nova][:network][:ha_enabled]
@@ -117,9 +124,16 @@ if apis.length > 0 and !node[:nova][:network][:ha_enabled]
 else
   api = node
 end
-admin_api_host = api[:fqdn]
+# For the public endpoint, we prefer the public name. If not set, then we use
+# the IP address except for SSL, where we always prefer a hostname (for
+# certificate validation)
+if api[:crowbar][:public_name].nil? and api[:nova][:api][:protocol] != "https"
+   public_api_host = Chef::Recipe::Barclamp::Inventory.get_network_by_type(api, "public").address
+else
+   public_api_host = api[:crowbar][:public_name].nil? ? 'public.'+api[:fqdn] : api[:crowbar][:public_name]
+end
 api_scheme = api[:nova][:api][:protocol]
-Chef::Log.info("Admin API server found at #{admin_api_host}")
+Chef::Log.info("Admin API server found at #{public_api_host}")
 
 # install python-glanceclient on controller, to be able to upload images
 # from here
@@ -134,13 +148,13 @@ template "/root/.openrc" do
   mode 0600
   variables(
     :keystone_protocol => keystone_protocol,
-    :keystone_host => keystone_host,
+    :keystone_host => public_keystone_host,
     :keystone_service_port => keystone_service_port,
     :admin_username => admin_username,
     :admin_password => admin_password,
     :default_tenant => default_tenant,
     :nova_api_protocol => api_scheme,
-    :nova_api_host => admin_api_host
+    :nova_api_host => public_api_host
   )
 end
 
