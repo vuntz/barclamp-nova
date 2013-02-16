@@ -147,6 +147,9 @@
   function on_role_change(callback, params) {
     var node = $('li', volume_path).text();
     if (node) {
+      var temp = Array();
+      temp = node.split(' ');
+      node = temp[0];
       $.getJSON('/nova/node_disks/' + node,
         function(data){
           make_disk_list(data, node);
