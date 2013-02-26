@@ -28,7 +28,12 @@
         "dhcp_enabled": true,
         "allow_same_net_traffic": false,
         "num_networks": 1,
-        "network_size": 256
+        "network_size": 256,
+        "auto_assign_floating_ip": false
+      },
+      "scheduler": {
+	"ram_allocation_ratio": 1.0,
+	"cpu_allocation_ratio": 1.0
       },
       "volume": {
         "ceph_instance": "none",

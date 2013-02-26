@@ -48,9 +48,21 @@
       %p
         %label{ :for => :network_size }= t('.network_size')
         %input#network_size{:type => "text", :name => "network_size", :'data-default' => @proposal.raw_data['attributes'][@proposal.barclamp]["network"]["network_size"], :onchange => "update_value('network/network_size','network_size', 'integer')"}
+      %p
+        %label{ :for => :auto_assign_floating_ip }= t('.auto_assign_floating_ip')
+        = select_tag :auto_assign_floating_ip, options_for_select([['true','true'], ['false', 'false']], :'selected' => @proposal.raw_data['attributes'][@proposal.barclamp]["network"]["auto_assign_floating_ip"].to_s), :onchange => "update_value('network/auto_assign_floating_ip', 'auto_assign_floating_ip', 'boolean')"
     %div{ :id => 'nova_volume_disks', :class => 'container' }
       %label{ :for => :volume_disks }= t('.nova_volume_disks')
       %ul{ :id => 'nova_volume_disks_list'}
+
+    %label{ :for => :scheduler }= t('.scheduler_header')
+    %div.container{ :id => :scheduler }
+      %p
+        %label{ :for => :ram_allocation_ratio }= t('.ram_allocation_ratio')
+        %input#ram_allocation_ratio{:type => "text", :name => "ram_allocation_ratio", :'data-default' => @proposal.raw_data['attributes'][@proposal.barclamp]["scheduler"]["ram_allocation_ratio"], :onchange => "update_value('scheduler/ram_allocation_ratio','ram_allocation_ratio', 'float')"}
+      %p
+        %label{ :for => :cpu_allocation_ratio }= t('.cpu_allocation_ratio')
+        %input#cpu_allocation_ratio{:type => "text", :name => "cpu_allocation_ratio", :'data-default' => @proposal.raw_data['attributes'][@proposal.barclamp]["scheduler"]["cpu_allocation_ratio"], :onchange => "update_value('scheduler/cpu_allocation_ratio','cpu_allocation_ratio', 'float')"}
 
     %label{ :for => :ssl }= t('.ssl')
     %div.container{ :id => :ssl }

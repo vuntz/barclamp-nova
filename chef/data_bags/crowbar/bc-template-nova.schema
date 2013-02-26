@@ -60,7 +60,16 @@
                 "flat_network_bridge": { "type": "str" },
                 "flat_interface": { "type": "str" },
                 "flat_network_dhcp_start": { "type": "str" },
-                "vlan_start": { "type": "int" }
+                "vlan_start": { "type": "int" },
+                "auto_assign_floating_ip": { "type": "bool" }
+              }
+            },
+            "scheduler": {
+              "type": "map",
+              "required": true,
+              "mapping": {
+                "ram_allocation_ratio": { "type": "number", "required": true },
+                "cpu_allocation_ratio": { "type": "number", "required": true }
               }
             },
             "volume": {

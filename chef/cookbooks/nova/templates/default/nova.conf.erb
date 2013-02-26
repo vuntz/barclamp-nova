@@ -27,6 +27,7 @@ rabbit_virtual_host=<%= @rabbit_settings[:vhost] %>
 # SCHEDULER
 # Default to multi-scheduler so that volume and compute can override
 ram_allocation_ratio=<%= node[:nova][:scheduler][:ram_allocation_ratio] %>
+cpu_allocation_ratio=<%= node[:nova][:scheduler][:cpu_allocation_ratio] %>
 
 # API
 osapi_compute_extension=nova.api.openstack.compute.contrib.standard_extensions
@@ -39,6 +40,9 @@ ec2_scheme=<%= @ec2_scheme %>
 ec2_host=<%= @ec2_host %>
 ec2_dmz_host=<%= @ec2_dmz_host %>
 osapi_host=<%= @ec2_host %>
+<% if node[:nova][:network][:auto_assign_floating_ip] -%>
+auto_assign_floating_ip=<%= node[:nova][:network][:auto_assign_floating_ip] %>
+<% end -%>
 fixed_range=<%= node[:nova][:network][:fixed_range] %>
 floating_range=<%= node[:nova][:network][:floating_range] %>
 <% if node[:nova][:network][:public_interface] -%>

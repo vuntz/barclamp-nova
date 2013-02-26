@@ -55,6 +55,7 @@ locale_additions:
           allow_same_net_traffic: Allow Same-Network Traffic
           num_networks: Number of Networks
           network_size: Network Size
+          auto_assign_floating_ip: Autoassigning floating IP to VM
           nova_volume_disks: Choose disks for nova-volume storage volume group
           ssl: Security Attributes
           ssl_hint: Nova-API will be provided by Apache2 via SSL-enabled WSGI vhost
@@ -67,6 +68,9 @@ locale_additions:
           novnc_ssl_cert: noVNC SSL Certificate File
           novnc_ssl_key: noVNC SSL Key File
           novnc_ssl_hint: 'Note: Unless files are specified the SSL certificate and key from Nova will be reused for noVNC by default.'
+          scheduler_header: Scheduler Options
+          ram_allocation_ratio: Virtual RAM to Physical RAM allocation ratio
+          cpu_allocation_ratio: Virtual CPU to Physical CPU allocation ratio
         edit_deployment: 
           deployment: Deployment
 
