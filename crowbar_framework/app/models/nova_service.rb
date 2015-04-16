@@ -222,6 +222,32 @@ class NovaService < PacemakerServiceObject
     @logger.debug("Nova apply_role_pre_chef_call: leaving")
   end
 
+  def export_to_deployment_config(role)
+    @logger.debug("Nova export_to_deployment_config: entering")
+
+    attributes = role.default_attributes[@bc_name]
+    deployment = role.override_attributes[@bc_name]
+
+    config = DeploymentConfig.new("openstack", @bc_name)
+
+    controller_element = deployment["elements"]["nova-multi-controller"].first
+
+    config.set({
+      "host" => OpenstackHelpers.get_host_for_admin_url(controller_element),
+      "port" => 8773, #FIXME: available in default attributes, but not in proposal
+      "protocol" => attributes["ssl"]["enabled"] ? "https" : "http",
+      "insecure" => attributes["ssl"]["enabled"] && attributes["ssl"]["insecure"],
+      "metadata" => {
+        "port" => 8775, #FIXME: available in default attributes, but not in proposal
+        "secret" => attributes["neutron_metadata_proxy_shared_secret"]
+      }
+    })
+
+    config.save
+
+    @logger.debug("Nova export_to_deployment_config: leaving")
+  end
+
   def validate_proposal_after_save proposal
     validate_one_for_role proposal, "nova-multi-controller"
 
